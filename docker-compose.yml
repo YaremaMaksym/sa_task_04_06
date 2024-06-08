@@ -1,22 +1,26 @@
 version: '3.8'
 
 services:
-    postgres:
+    postgres-service:
         image: postgres:latest
         container_name: postgres-container
         ports:
-            - "5432:5432"
+            - "5430:5432"
+        volumes:
+            - postgres-volume:/var/lib/postgresql/data
         environment:
             POSTGRES_USER: ${POSTGRES_USER}
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
         networks:
             - db_network
 
-    mongodb:
+    mongodb-service:
         image: mongo:latest
         container_name: mongodb-container
         ports:
             - "27017:27017"
+        volumes:
+            - mongodb-volume:/data/db
         environment:
             MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
             MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
@@ -26,3 +30,7 @@ services:
 networks:
     db_network:
         driver: bridge
+
+volumes:
+    postgres-volume:
+    mongodb-volume:
