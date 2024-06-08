@@ -1,0 +1,15 @@
+spring:
+    application:
+        name: sa_task_04_06
+    data:
+        mongodb:
+            uri: mongodb://localhost:27017/sa_db
+            username: admin
+            password: pass
+    datasource:
+        url: jdbc:postgresql://localhost:5430/sa_db
+        username: postgres
+        password: pass
+    jpa:
+        hibernate:
+            ddl-auto: update
