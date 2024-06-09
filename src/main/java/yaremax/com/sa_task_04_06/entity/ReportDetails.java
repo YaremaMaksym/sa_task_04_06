@@ -7,9 +7,10 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Objects;
 import java.util.UUID;
 
-@Data // todo: remove @Data and add getter&setter + safe hashcode and equals
+@Data
 @Document
 @Builder
 @NoArgsConstructor
@@ -20,4 +21,17 @@ public class ReportDetails {
 
     private org.bson.Document financialData; // JSON data
     private String comments;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ReportDetails that = (ReportDetails) o;
+        return Objects.equals(reportId, that.reportId) && Objects.equals(financialData, that.financialData) && Objects.equals(comments, that.comments);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(reportId, financialData, comments);
+    }
 }
