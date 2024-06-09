@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -32,4 +33,17 @@ public class Company {
 
     @OneToMany(mappedBy = "company")
     private Set<Report> reports = new LinkedHashSet<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Company company = (Company) o;
+        return Objects.equals(id, company.id) && Objects.equals(name, company.name) && Objects.equals(registrationNumber, company.registrationNumber) && Objects.equals(address, company.address) && Objects.equals(created_at, company.created_at);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, registrationNumber, address, created_at);
+    }
 }
