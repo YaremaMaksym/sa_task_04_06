@@ -43,7 +43,6 @@ class CompanyServiceTest {
             // Arrange
             UUID companyId = UUID.randomUUID();
             CompanyDto companyDto = CompanyDto.builder()
-                    .id(companyId)
                     .name("Test Company")
                     .registrationNumber("REG123")
                     .address("123 Test St")
@@ -65,7 +64,10 @@ class CompanyServiceTest {
             CompanyDto savedCompanyDto = companyService.addCompany(companyDto);
 
             // Assert
-            assertThat(savedCompanyDto).isEqualTo(companyDto);
+            assertThat(savedCompanyDto)
+                    .usingRecursiveComparison()
+                    .ignoringFields("id")
+                    .isEqualTo(companyDto);
             verify(companyRepository).existsByRegistrationNumber(companyDto.getRegistrationNumber());
             verify(companyRepository).save(any(Company.class));
         }
@@ -251,30 +253,30 @@ class CompanyServiceTest {
         @Test
         void deleteCompany_shouldDeleteCompany_whenCompanyExists() {
             // Arrange
-            UUID companyId = UUID.randomUUID();
-            when(companyRepository.existsById(companyId)).thenReturn(true);
-            doNothing().when(companyRepository).deleteById(companyId);
+            UUID id = UUID.randomUUID();
+            when(companyRepository.existsById(id)).thenReturn(true);
+            doNothing().when(companyRepository).deleteById(id);
 
             // Act
-            companyService.deleteCompany(companyId);
+            companyService.deleteCompany(id);
 
             // Assert
-            verify(companyRepository).existsById(companyId);
-            verify(companyRepository).deleteById(companyId);
+            verify(companyRepository).existsById(id);
+            verify(companyRepository).deleteById(id);
         }
 
         @Test
         void deleteCompany_shouldThrowResourceNotFoundException_whenCompanyNotFound() {
             // Arrange
-            UUID companyId = UUID.randomUUID();
-            when(companyRepository.existsById(companyId)).thenReturn(false);
+            UUID id = UUID.randomUUID();
+            when(companyRepository.existsById(id)).thenReturn(false);
 
             // Act & Assert
             assertThatExceptionOfType(ResourceNotFoundException.class)
-                    .isThrownBy(() -> companyService.deleteCompany(companyId))
-                    .withMessageContaining(companyId.toString());
+                    .isThrownBy(() -> companyService.deleteCompany(id))
+                    .withMessageContaining(id.toString());
 
-            verify(companyRepository).existsById(companyId);
+            verify(companyRepository).existsById(id);
             verify(companyRepository, never()).deleteById(any(UUID.class));
         }
     }
