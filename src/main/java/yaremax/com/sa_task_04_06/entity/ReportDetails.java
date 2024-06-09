@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
@@ -19,6 +18,6 @@ public class ReportDetails {
     @Id
     private UUID reportId;
 
-    private MultipartFile financialData; // JSON data
+    private org.bson.Document financialData; // JSON data
     private String comments;
 }
