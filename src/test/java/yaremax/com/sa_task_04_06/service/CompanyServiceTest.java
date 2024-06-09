@@ -37,7 +37,7 @@ class CompanyServiceTest {
     }
 
     @Nested
-    class createCompanyTests {
+    class CreateCompanyTests {
         @Test
         void createCompany_shouldCreateCompany_whenRegistrationNumberNotExists() {
             // Arrange
@@ -254,30 +254,31 @@ class CompanyServiceTest {
         void deleteCompany_shouldDeleteCompany_whenCompanyExists() {
             // Arrange
             UUID id = UUID.randomUUID();
-            when(companyRepository.existsById(id)).thenReturn(true);
-            doNothing().when(companyRepository).deleteById(id);
+            Company existingCompany = new Company();
+            when(companyRepository.findById(id)).thenReturn(Optional.of(existingCompany));
+            doNothing().when(companyRepository).delete(any(Company.class));
 
             // Act
             companyService.deleteCompany(id);
 
             // Assert
-            verify(companyRepository).existsById(id);
-            verify(companyRepository).deleteById(id);
+            verify(companyRepository).findById(id);
+            verify(companyRepository).delete(any(Company.class));
         }
 
         @Test
         void deleteCompany_shouldThrowResourceNotFoundException_whenCompanyNotFound() {
             // Arrange
             UUID id = UUID.randomUUID();
-            when(companyRepository.existsById(id)).thenReturn(false);
+            when(companyRepository.findById(id)).thenReturn(Optional.empty());
 
             // Act & Assert
             assertThatExceptionOfType(ResourceNotFoundException.class)
                     .isThrownBy(() -> companyService.deleteCompany(id))
                     .withMessageContaining(id.toString());
 
-            verify(companyRepository).existsById(id);
-            verify(companyRepository, never()).deleteById(any(UUID.class));
+            verify(companyRepository).findById(id);
+            verify(companyRepository, never()).delete(any(Company.class));
         }
     }
 }
