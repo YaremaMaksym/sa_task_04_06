@@ -3,6 +3,7 @@ package yaremax.com.sa_task_04_06.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import yaremax.com.sa_task_04_06.dto.ReportDto;
+import yaremax.com.sa_task_04_06.entity.Company;
 import yaremax.com.sa_task_04_06.entity.Report;
 import yaremax.com.sa_task_04_06.exception.custom.ResourceNotFoundException;
 import yaremax.com.sa_task_04_06.repository.ReportRepository;
@@ -46,21 +47,20 @@ public class ReportService {
 
     @Transactional
     public ReportDto updateReport(UUID id, ReportDto updateReportRequestDto) {
-        Report existingReport = reportRepository.findById(id)
+        reportRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Report with id " + id + " not found"));
-        if (existingReport.getCompany().getId() != updateReportRequestDto.getCompanyId()) {
-            existingReport.setCompany(referenceService.getExistingCompanyReference(updateReportRequestDto.getCompanyId()));
-        }
+        Company companyReference = referenceService.getExistingCompanyReference(updateReportRequestDto.getCompanyId());
+
         Report report = reportMapper.toEntity(updateReportRequestDto);
+        report.setCompany(companyReference);
         Report savedReport = reportRepository.save(report);
         return reportMapper.toDto(savedReport);
     }
 
     @Transactional
     public void deleteReport(UUID id) {
-        if (!reportRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Report with id " + id + " not found");
-        }
-        reportRepository.deleteById(id);
+        Report reportToDelete = reportRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Report with id " + id + " not found"));
+        reportRepository.delete(reportToDelete);
     }
 }

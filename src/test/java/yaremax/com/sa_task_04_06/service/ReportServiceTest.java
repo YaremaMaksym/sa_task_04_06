@@ -247,7 +247,6 @@ class ReportServiceTest {
                     .isEqualTo(updateReportDto);
             verify(reportRepository).findById(reportId);
             verify(reportRepository).save(any(Report.class));
-            verify(referenceService, never()).getExistingCompanyReference(any());
         }
 
         @Test
@@ -341,30 +340,30 @@ class ReportServiceTest {
         void deleteReport_shouldDeleteReport_whenReportExists() {
             // Arrange
             UUID id = UUID.randomUUID();
-            when(reportRepository.existsById(id)).thenReturn(true);
-            doNothing().when(reportRepository).deleteById(id);
+            Report foundReport = new Report();
+            when(reportRepository.findById(id)).thenReturn(Optional.of(foundReport));
 
             // Act
             reportService.deleteReport(id);
 
             // Assert
-            verify(reportRepository).existsById(id);
-            verify(reportRepository).deleteById(id);
+            verify(reportRepository).findById(id);
+            verify(reportRepository).delete(foundReport);
         }
 
         @Test
         void deleteReport_shouldThrowResourceNotFoundException_whenReportNotFound() {
             // Arrange
             UUID id = UUID.randomUUID();
-            when(reportRepository.existsById(id)).thenReturn(false);
+            when(reportRepository.findById(id)).thenReturn(Optional.empty());
 
             // Act & Assert
             assertThatExceptionOfType(ResourceNotFoundException.class)
                     .isThrownBy(() -> reportService.deleteReport(id))
                     .withMessageContaining(id.toString());
 
-            verify(reportRepository).existsById(id);
-            verify(reportRepository, never()).deleteById(any(UUID.class));
+            verify(reportRepository).findById(id);
+            verify(reportRepository, never()).delete(any(Report.class));
         }
     }
 }
