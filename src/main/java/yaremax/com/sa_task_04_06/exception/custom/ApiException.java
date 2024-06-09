@@ -1,13 +1,18 @@
-package yaremax.com.pb_task_24_04.exception;
+package yaremax.com.sa_task_04_06.exception.custom;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import org.springframework.http.HttpStatus;
 
 import java.time.ZonedDateTime;
 
+@Data
 @Builder
-public record ApiException (
-        String message,
-        HttpStatus httpStatus,
-        ZonedDateTime timeStamp) {
+@AllArgsConstructor
+public final class ApiException {
+    private final String message;
+    private final HttpStatus httpStatus;
+    private final ZonedDateTime timeStamp;
+
 }

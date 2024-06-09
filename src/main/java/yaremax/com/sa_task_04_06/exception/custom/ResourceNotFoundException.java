@@ -1,4 +1,4 @@
-package yaremax.com.cs_task_24_04.exceptions;
+package yaremax.com.sa_task_04_06.exception.custom;
 
 public class ResourceNotFoundException extends RuntimeException{
     public ResourceNotFoundException(String message){

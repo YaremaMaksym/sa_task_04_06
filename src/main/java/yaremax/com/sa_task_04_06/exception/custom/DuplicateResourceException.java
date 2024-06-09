@@ -1,2 +1,12 @@
-package yaremax.com.sa_task_04_06.exception.custom;public class DuplicateResourceException {
+package yaremax.com.sa_task_04_06.exception.custom;
+
+public class DuplicateResourceException extends RuntimeException {
+    public DuplicateResourceException(String message) {
+        super(message);
+    }
+
+    public DuplicateResourceException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }
+

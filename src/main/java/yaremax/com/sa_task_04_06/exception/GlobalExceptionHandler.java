@@ -1,6 +1,5 @@
-package yaremax.com.pb_task_24_04.exception;
+package yaremax.com.sa_task_04_06.exception;
 
-import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -8,7 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import yaremax.com.sa_task_04_06.exception.custom.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
@@ -29,17 +30,27 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private ResponseEntity<Object> handleException(RuntimeException ex, HttpServletRequest request, HttpStatus httpStatus) {
         ApiException apiException = buildApiException(ex, httpStatus);
         LOGGER.error(LOGGER_MESSAGE_PREFIX + "{}", ex.getMessage());
-        return new ResponseEntity<>(apiException, apiException.httpStatus());
+        return new ResponseEntity<>(apiException, apiException.getHttpStatus());
     }
 
 
-    @ExceptionHandler(value = {InvalidDataException.class, FileParsingException.class})
+    @ExceptionHandler(value = {InvalidDataException.class})
     public ResponseEntity<Object> handleBadRequestExceptions(RuntimeException ex, HttpServletRequest request){
         return handleException(ex, request, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(value = {IllegalStateException.class, NullPointerException.class, IllegalArgumentException.class, FileConversionException.class})
+    @ExceptionHandler(value = {IllegalStateException.class, NullPointerException.class, IllegalArgumentException.class})
     public ResponseEntity<Object> handleInternalServerErrorExceptions(RuntimeException ex, HttpServletRequest request){
         return handleException(ex, request, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(value = {DuplicateResourceException.class})
+    public ResponseEntity<Object> handleConflictExceptions(RuntimeException ex, HttpServletRequest request){
+        return handleException(ex, request, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(value = {ResourceNotFoundException.class})
+    public ResponseEntity<Object> handleNotFoundExceptions(RuntimeException ex, HttpServletRequest request){
+        return handleException(ex, request, HttpStatus.NOT_FOUND);
     }
 }
