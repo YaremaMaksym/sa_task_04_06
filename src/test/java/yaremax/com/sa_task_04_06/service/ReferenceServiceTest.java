@@ -10,6 +10,7 @@ import yaremax.com.sa_task_04_06.entity.Company;
 import yaremax.com.sa_task_04_06.exception.custom.ResourceNotFoundException;
 import yaremax.com.sa_task_04_06.repository.CompanyRepository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,7 +38,7 @@ class ReferenceServiceTest {
             UUID companyId = UUID.randomUUID();
             Company company = Company.builder().id(companyId).build();
 
-            when(companyRepository.existsById(companyId)).thenReturn(true);
+            when(companyRepository.findById(companyId)).thenReturn(Optional.of(company));
             when(companyRepository.getReferenceById(companyId)).thenReturn(company);
 
             // Act
@@ -45,7 +46,7 @@ class ReferenceServiceTest {
 
             // Assert
             assertThat(result).isSameAs(company);
-            verify(companyRepository).existsById(companyId);
+            verify(companyRepository).findById(companyId);
             verify(companyRepository).getReferenceById(companyId);
         }
 
@@ -53,14 +54,14 @@ class ReferenceServiceTest {
         void getExistingCompanyReference_shouldThrowResourceNotFoundException_whenCompanyNotFound() {
             // Arrange
             UUID companyId = UUID.randomUUID();
-            when(companyRepository.existsById(companyId)).thenReturn(false);
+            when(companyRepository.findById(companyId)).thenReturn(Optional.empty());
 
             // Act & Assert
             assertThatExceptionOfType(ResourceNotFoundException.class)
                     .isThrownBy(() -> referenceService.getExistingCompanyReference(companyId))
                     .withMessageContaining(companyId.toString());
 
-            verify(companyRepository).existsById(companyId);
+            verify(companyRepository).findById(companyId);
             verify(companyRepository, never()).getReferenceById(any(UUID.class));
         }
     }

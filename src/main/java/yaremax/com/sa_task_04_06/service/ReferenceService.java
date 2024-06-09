@@ -14,9 +14,8 @@ public class ReferenceService {
     private final CompanyRepository companyRepository;
 
     public Company getExistingCompanyReference(UUID id) {
-        if (!companyRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Company with id " + id + " not found");
-        }
+        companyRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Company with id " + id + " not found"));
         return companyRepository.getReferenceById(id);
     }
 }
