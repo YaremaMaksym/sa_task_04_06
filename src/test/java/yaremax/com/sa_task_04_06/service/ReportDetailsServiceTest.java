@@ -199,30 +199,30 @@ class ReportDetailsServiceTest {
         void deleteReportDetails_shouldDeleteReportDetails_whenReportDetailsExist() {
             // Arrange
             UUID id = UUID.randomUUID();
-            when(reportDetailsRepository.existsById(id)).thenReturn(true);
-            doNothing().when(reportDetailsRepository).deleteById(id);
+            ReportDetails foundReportDetails = new ReportDetails();
+            when(reportDetailsRepository.findById(id)).thenReturn(Optional.of(foundReportDetails));
 
             // Act
             reportDetailsService.deleteReportDetails(id);
 
             // Assert
-            verify(reportDetailsRepository).existsById(id);
-            verify(reportDetailsRepository).deleteById(id);
+            verify(reportDetailsRepository).findById(id);
+            verify(reportDetailsRepository).delete(foundReportDetails);
         }
 
         @Test
         void deleteReportDetails_shouldThrowResourceNotFoundException_whenReportDetailsNotFound() {
             // Arrange
             UUID id = UUID.randomUUID();
-            when(reportDetailsRepository.existsById(id)).thenReturn(false);
+            when(reportDetailsRepository.findById(id)).thenReturn(Optional.empty());
 
             // Act & Assert
             assertThatExceptionOfType(ResourceNotFoundException.class)
                     .isThrownBy(() -> reportDetailsService.deleteReportDetails(id))
                     .withMessageContaining(id.toString());
 
-            verify(reportDetailsRepository).existsById(id);
-            verify(reportDetailsRepository, never()).deleteById(id);
+            verify(reportDetailsRepository).findById(id);
+            verify(reportDetailsRepository, never()).delete(any(ReportDetails.class));
         }
     }
 }

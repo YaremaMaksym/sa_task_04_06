@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import yaremax.com.sa_task_04_06.dto.ReportDetailsDto;
+import yaremax.com.sa_task_04_06.entity.Report;
 import yaremax.com.sa_task_04_06.entity.ReportDetails;
 import yaremax.com.sa_task_04_06.exception.custom.ResourceNotFoundException;
 import yaremax.com.sa_task_04_06.repository.ReportDetailsRepository;
@@ -47,9 +48,8 @@ public class ReportDetailsService {
 
     @Transactional
     public void deleteReportDetails(UUID id) {
-        if (!reportDetailsRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Report details with id " + id + " not found");
-        }
-        reportDetailsRepository.deleteById(id);
+        ReportDetails reportDetailsToDelete = reportDetailsRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Report details with id " + id + " not found"));
+        reportDetailsRepository.delete(reportDetailsToDelete);
     }
 }
