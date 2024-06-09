@@ -10,6 +10,7 @@ import yaremax.com.sa_task_04_06.exception.custom.ResourceNotFoundException;
 import yaremax.com.sa_task_04_06.repository.CompanyRepository;
 import yaremax.com.sa_task_04_06.service.mapper.CompanyMapper;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,6 +26,7 @@ public class CompanyService {
             throw new DuplicateResourceException("Company with registration number " + createCompanyRequestDto.getRegistrationNumber() + " already exists");
         }
         Company company = companyMapper.toEntity(createCompanyRequestDto);
+        company.setCreated_at(LocalDate.now());
         Company savedCompany = companyRepository.save(company);
         return companyMapper.toDto(savedCompany);
     }
