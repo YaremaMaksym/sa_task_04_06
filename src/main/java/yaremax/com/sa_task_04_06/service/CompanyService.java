@@ -20,7 +20,7 @@ public class CompanyService {
     private final CompanyMapper companyMapper = CompanyMapper.INSTANCE;
 
     @Transactional
-    public CompanyDto addCompany(CompanyDto createCompanyRequestDto) {
+    public CompanyDto createCompany(CompanyDto createCompanyRequestDto) {
         if (companyRepository.existsByRegistrationNumber(createCompanyRequestDto.getRegistrationNumber())) {
             throw new DuplicateResourceException("Company with registration number " + createCompanyRequestDto.getRegistrationNumber() + " already exists");
         }

@@ -37,9 +37,9 @@ class CompanyServiceTest {
     }
 
     @Nested
-    class AddCompanyTests {
+    class createCompanyTests {
         @Test
-        void addCompany_shouldAddCompany_whenRegistrationNumberNotExists() {
+        void createCompany_shouldCreateCompany_whenRegistrationNumberNotExists() {
             // Arrange
             UUID companyId = UUID.randomUUID();
             CompanyDto companyDto = CompanyDto.builder()
@@ -61,7 +61,7 @@ class CompanyServiceTest {
             when(companyRepository.save(any(Company.class))).thenReturn(company);
 
             // Act
-            CompanyDto savedCompanyDto = companyService.addCompany(companyDto);
+            CompanyDto savedCompanyDto = companyService.createCompany(companyDto);
 
             // Assert
             assertThat(savedCompanyDto)
@@ -73,7 +73,7 @@ class CompanyServiceTest {
         }
 
         @Test
-        void addCompany_shouldThrowDuplicateResourceException_whenRegistrationNumberExists() {
+        void createCompany_shouldThrowDuplicateResourceException_whenRegistrationNumberExists() {
             // Arrange
             CompanyDto companyDto = CompanyDto.builder()
                     .registrationNumber("REG123")
@@ -83,7 +83,7 @@ class CompanyServiceTest {
 
             // Act & Assert
             assertThatExceptionOfType(DuplicateResourceException.class)
-                    .isThrownBy(() -> companyService.addCompany(companyDto))
+                    .isThrownBy(() -> companyService.createCompany(companyDto))
                     .withMessageContaining(companyDto.getRegistrationNumber());
 
             verify(companyRepository).existsByRegistrationNumber(companyDto.getRegistrationNumber());
