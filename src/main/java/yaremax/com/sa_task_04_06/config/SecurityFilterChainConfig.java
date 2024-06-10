@@ -47,6 +47,8 @@ public class SecurityFilterChainConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeRequests()
+                    .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html",
+                            "/swagger-resources/**", "/webjars/**").permitAll() // Documentation
                     .antMatchers("/api/v1/auth/**").permitAll()
                     .anyRequest().authenticated()
                 .and()

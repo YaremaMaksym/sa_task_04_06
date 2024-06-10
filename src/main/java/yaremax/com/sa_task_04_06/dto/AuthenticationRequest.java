@@ -1,5 +1,6 @@
 package yaremax.com.sa_task_04_06.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,10 +22,14 @@ public class AuthenticationRequest {
     /**
      * The user's email.
      */
+    @Schema(description = "The user's email",
+            example = "john.doe@example.com")
     private String email;
 
     /**
      * The user's password.
      */
+    @Schema(description = "The user's password",
+            example = "mySecurePassword123!")
     private String password;
 }
