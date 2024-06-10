@@ -13,3 +13,9 @@ spring:
     jpa:
         hibernate:
             ddl-auto: update
+
+app:
+    config:
+        security:
+            jwt:
+                secret_key: ${JWT_SECRET_KEY}
