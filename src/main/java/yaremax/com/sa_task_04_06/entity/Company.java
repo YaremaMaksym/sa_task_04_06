@@ -12,6 +12,13 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * Company entity class
+ *
+ * @author Yaremax
+ * @version 1.0
+ * @since 2024-10-06
+ */
 @Data
 @Entity
 @Table(name = "companies")
@@ -19,21 +26,46 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Company {
+    /**
+     * Company id
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
+    /**
+     * Company name
+     */
     private String name;
 
+    /**
+     * Company registration number
+     */
     @Column(unique = true)
     private String registrationNumber;
 
+    /**
+     * Company address
+     */
     private String address;
+
+    /**
+     * Company creation date
+     */
     private LocalDate created_at;
 
+    /**
+     * Company reports
+     */
     @OneToMany(mappedBy = "company")
     private Set<Report> reports = new LinkedHashSet<>();
 
+    /**
+     * Checks if the company is equal to another
+     *
+     * @param o the object to check equality with
+     * @return true if objects are equal, false otherwise
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -42,6 +74,11 @@ public class Company {
         return Objects.equals(id, company.id) && Objects.equals(name, company.name) && Objects.equals(registrationNumber, company.registrationNumber) && Objects.equals(address, company.address) && Objects.equals(created_at, company.created_at);
     }
 
+    /**
+     * Calculates hash code for the company
+     *
+     * @return hash code
+     */
     @Override
     public int hashCode() {
         return Objects.hash(id, name, registrationNumber, address, created_at);

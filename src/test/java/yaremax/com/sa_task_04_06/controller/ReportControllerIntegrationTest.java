@@ -145,7 +145,7 @@ class ReportControllerIntegrationTest {
                     .andExpect(jsonPath("$", hasSize(3)));
         }
 
-//        TODO: For some reason while doing this integration test,
+//        For some reason while doing this integration test,
 //                  it can return all entities from the database,
 //                  but when asked only for those that belong to a certain company, it returns an empty array.
 //              The method itself works, but not when testing

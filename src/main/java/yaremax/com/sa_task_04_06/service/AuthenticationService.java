@@ -9,15 +9,29 @@ import yaremax.com.sa_task_04_06.dto.AuthenticationRequest;
 import yaremax.com.sa_task_04_06.dto.AuthenticationResponse;
 import yaremax.com.sa_task_04_06.entity.User;
 
+
+/**
+ * This class provides service for user authentication.
+ * It implements registration and login functionality.
+ *
+ * @author Yaremax
+ * @version 1.0
+ * @since 2024-10-06
+ */
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
-
     private final JwtService jwtService;
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
+    /**
+     * Registers a new user.
+     *
+     * @param  request  the {@link AuthenticationRequest} DTO
+     * @return          the {@link AuthenticationResponse} DTO with JWT token
+     */
     public AuthenticationResponse register(AuthenticationRequest request) {
         User user = User.builder()
                 .email(request.getEmail())
@@ -28,6 +42,13 @@ public class AuthenticationService {
         String jwtToken = jwtService.generateToken(user);
         return new AuthenticationResponse(jwtToken);
     }
+
+    /**
+     * Logs in an existing user.
+     *
+     * @param  request  the {@link AuthenticationRequest} DTO
+     * @return          the {@link AuthenticationResponse} DTO with JWT token
+     */
     public AuthenticationResponse login(AuthenticationRequest request) {
         // will also check if username and password are correct
         authenticationManager.authenticate(

@@ -5,16 +5,12 @@ import yaremax.com.sa_task_04_06.entity.ReportDetails;
 
 import java.util.UUID;
 
-//@Repository works without annotation?
+/**
+ * Mongo repository for {@link ReportDetails}.
+ * 
+ * @author Yaremax
+ * @version 1.0
+ * @since 2024-10-06
+ */
 public interface ReportDetailsRepository extends MongoRepository<ReportDetails, UUID> {
-
-    /*
-    Optional<Student> findStudentByEmail(String email);
-
-    @Query("db.student.find()")
-    List<Student> findAllUsingQuery();
-
-    @Query("db.student.find({'email': ?0})")
-    Student findByEmailUsingQuery(String email);
-     */
 }

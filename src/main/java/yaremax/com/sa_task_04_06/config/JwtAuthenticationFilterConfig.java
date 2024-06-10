@@ -17,6 +17,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * This class is responsible for authenticating users using JWT tokens.
+ * It intercepts incoming HTTP requests and checks if the request contains a valid JWT token.
+ * If the token is valid, it authenticates the user and adds the authentication information to the security context.
+ *
+ * @author Yaremax
+ * @version 1.0
+ * @since 2024-10-06
+ */
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilterConfig extends OncePerRequestFilter {
@@ -24,6 +33,17 @@ public class JwtAuthenticationFilterConfig extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
+    /**
+     * This method is the main logic of the filter. It intercepts incoming HTTP requests and checks if the request
+     * contains a valid JWT token. If the token is valid, it authenticates the user and adds the authentication
+     * information to the security context.
+     *
+     * @param request the HTTP request
+     * @param response the HTTP response
+     * @param filterChain the filter chain
+     * @throws ServletException if a servlet error occurs
+     * @throws IOException if an I/O error occurs
+     */
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
