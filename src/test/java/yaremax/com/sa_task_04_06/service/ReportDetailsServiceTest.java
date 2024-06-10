@@ -9,15 +9,18 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import yaremax.com.sa_task_04_06.dto.ReportDetailsDto;
+import yaremax.com.sa_task_04_06.entity.Report;
 import yaremax.com.sa_task_04_06.entity.ReportDetails;
+import yaremax.com.sa_task_04_06.exception.custom.DuplicateResourceException;
+import yaremax.com.sa_task_04_06.exception.custom.InvalidDataException;
 import yaremax.com.sa_task_04_06.exception.custom.ResourceNotFoundException;
 import yaremax.com.sa_task_04_06.repository.ReportDetailsRepository;
+import yaremax.com.sa_task_04_06.repository.ReportRepository;
 import yaremax.com.sa_task_04_06.service.mapper.ReportDetailsMapper;
 
 import java.util.*;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -25,12 +28,14 @@ class ReportDetailsServiceTest {
 
     @Mock
     private ReportDetailsRepository reportDetailsRepository;
+    @Mock
+    private ReportRepository reportRepository;
 
     private ReportDetailsService reportDetailsService;
 
     @BeforeEach
     void setUp() {
-        reportDetailsService = new ReportDetailsService(reportDetailsRepository);
+        reportDetailsService = new ReportDetailsService(reportDetailsRepository, reportRepository);
     }
 
     @Nested
@@ -51,6 +56,8 @@ class ReportDetailsServiceTest {
                     .comments("Test comments")
                     .build();
 
+            when(reportRepository.findById(reportId)).thenReturn(Optional.of(new Report()));
+            when(reportDetailsRepository.existsById(reportId)).thenReturn(false);
             when(reportDetailsRepository.save(any(ReportDetails.class))).thenReturn(reportDetails);
 
             // Act
@@ -60,7 +67,69 @@ class ReportDetailsServiceTest {
             assertThat(savedReportDetailsDto)
                     .usingRecursiveComparison()
                     .isEqualTo(createReportDetailsRequestDto);
+            verify(reportRepository).findById(reportId);
+            verify(reportDetailsRepository).existsById(reportId);
             verify(reportDetailsRepository).save(any(ReportDetails.class));
+        }
+
+        @Test
+        void createReportDetails_shouldThrowInvalidDataException_whenReportIdIsNull() {
+            // Arrange
+            ReportDetailsDto createReportDetailsRequestDto = ReportDetailsDto.builder()
+                    .financialData(new Document("revenue", 100000))
+                    .comments("Test comments")
+                    .build();
+
+            // Act & Assert
+            assertThatThrownBy(() -> reportDetailsService.createReportDetails(createReportDetailsRequestDto))
+                    .isInstanceOf(InvalidDataException.class);
+
+            verify(reportRepository, never()).findById(any());
+            verify(reportDetailsRepository, never()).existsById(any());
+            verify(reportDetailsRepository, never()).save(any());
+        }
+
+        @Test
+        void createReportDetails_shouldThrowResourceNotFoundException_whenReportDoesNotExist() {
+            // Arrange
+            UUID nonExistentReportId = UUID.randomUUID();
+            ReportDetailsDto createReportDetailsRequestDto = ReportDetailsDto.builder()
+                    .reportId(nonExistentReportId)
+                    .financialData(new Document("revenue", 100000))
+                    .build();
+
+            when(reportRepository.findById(nonExistentReportId)).thenReturn(Optional.empty());
+
+            // Act & Assert
+            assertThatThrownBy(() -> reportDetailsService.createReportDetails(createReportDetailsRequestDto))
+                    .isInstanceOf(ResourceNotFoundException.class)
+                    .hasMessageContaining(nonExistentReportId.toString());
+
+            verify(reportRepository).findById(nonExistentReportId);
+            verify(reportDetailsRepository, never()).existsById(any());
+            verify(reportDetailsRepository, never()).save(any());
+        }
+
+        @Test
+        void createReportDetails_shouldThrowDuplicateResourceException_whenReportDetailsAlreadyExist() {
+            // Arrange
+            UUID existingReportId = UUID.randomUUID();
+            ReportDetailsDto createReportDetailsRequestDto = ReportDetailsDto.builder()
+                    .reportId(existingReportId)
+                    .financialData(new Document("revenue", 100000))
+                    .build();
+
+            when(reportRepository.findById(existingReportId)).thenReturn(Optional.of(new Report()));
+            when(reportDetailsRepository.existsById(existingReportId)).thenReturn(true);
+
+            // Act & Assert
+            assertThatThrownBy(() -> reportDetailsService.createReportDetails(createReportDetailsRequestDto))
+                    .isInstanceOf(DuplicateResourceException.class)
+                    .hasMessageContaining(existingReportId.toString());
+
+            verify(reportRepository).findById(existingReportId);
+            verify(reportDetailsRepository).existsById(existingReportId);
+            verify(reportDetailsRepository, never()).save(any());
         }
     }
 
@@ -177,6 +246,7 @@ class ReportDetailsServiceTest {
             // Arrange
             UUID id = UUID.randomUUID();
             ReportDetailsDto updatedDto = ReportDetailsDto.builder()
+                    .reportId(id)
                     .financialData(new Document("revenue", 200000))
                     .comments("Updated comments")
                     .build();
@@ -184,12 +254,80 @@ class ReportDetailsServiceTest {
             when(reportDetailsRepository.existsById(id)).thenReturn(false);
 
             // Act & Assert
-            assertThatExceptionOfType(ResourceNotFoundException.class)
-                    .isThrownBy(() -> reportDetailsService.updateReportDetails(id, updatedDto))
-                    .withMessageContaining(id.toString());
+            assertThatThrownBy(() -> reportDetailsService.updateReportDetails(id, updatedDto))
+                    .isInstanceOf(ResourceNotFoundException.class)
+                    .hasMessage("Report details with id " + id + " not found");
 
             verify(reportDetailsRepository).existsById(id);
             verify(reportDetailsRepository, never()).save(any(ReportDetails.class));
+        }
+
+        @Test
+        void updateReportDetails_shouldThrowInvalidDataException_whenIdsDoNotMatch() {
+            // Arrange
+            UUID pathId = UUID.randomUUID();
+            UUID dtoId = UUID.randomUUID();
+            ReportDetailsDto updatedDto = ReportDetailsDto.builder()
+                    .reportId(dtoId)  // This ID doesn't match the path ID
+                    .financialData(new Document("revenue", 200000))
+                    .comments("Updated comments")
+                    .build();
+
+            // Act & Assert
+            assertThatThrownBy(() -> reportDetailsService.updateReportDetails(pathId, updatedDto))
+                    .isInstanceOf(InvalidDataException.class)
+                    .hasMessageContaining(pathId.toString(), dtoId.toString());
+
+            verify(reportDetailsRepository, never()).existsById(any());
+            verify(reportDetailsRepository, never()).save(any(ReportDetails.class));
+        }
+
+        @Test
+        void updateReportDetails_shouldUpdatePartialData() {
+            // Arrange
+            UUID id = UUID.randomUUID();
+            ReportDetailsDto originalDto = ReportDetailsDto.builder()
+                    .reportId(id)
+                    .financialData(new Document()
+                            .append("revenue", 100000)
+                            .append("operatingExpenses", 50000))
+                    .comments("Original comments")
+                    .build();
+
+            ReportDetails originalReportDetails = ReportDetails.builder()
+                    .reportId(id)
+                    .financialData(new Document()
+                            .append("revenue", 100000)
+                            .append("operatingExpenses", 50000))
+                    .comments("Original comments")
+                    .build();
+
+            ReportDetailsDto updatedDto = ReportDetailsDto.builder()
+                    .reportId(id)
+                    .financialData(new Document()
+                            .append("revenue", 150000))  // Only updating revenue
+                    .build();
+
+            ReportDetails updatedReportDetails = ReportDetails.builder()
+                    .reportId(id)
+                    .financialData(new Document()
+                            .append("revenue", 150000))  // Only revenue is updated
+                    .build();
+
+            when(reportDetailsRepository.existsById(id)).thenReturn(true);
+            when(reportDetailsRepository.save(any(ReportDetails.class))).thenReturn(updatedReportDetails);
+
+            // Act
+            ReportDetailsDto result = reportDetailsService.updateReportDetails(id, updatedDto);
+
+            // Assert
+            assertThat(result)
+                    .usingRecursiveComparison()
+                    .isEqualTo(updatedDto);
+            assertThat(result.getFinancialData().keySet()).containsOnly("revenue");
+            assertThat(result.getComments()).isNull();
+            verify(reportDetailsRepository).existsById(id);
+            verify(reportDetailsRepository).save(any(ReportDetails.class));
         }
     }
 
