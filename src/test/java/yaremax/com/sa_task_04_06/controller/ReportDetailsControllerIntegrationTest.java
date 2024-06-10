@@ -24,10 +24,10 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest(classes = SaTask0406Application.class)
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Transactional
+@SpringBootTest(classes = SaTask0406Application.class)
 class ReportDetailsControllerIntegrationTest {
 
     @Autowired
