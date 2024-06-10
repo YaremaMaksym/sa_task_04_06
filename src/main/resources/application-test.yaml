@@ -11,5 +11,5 @@ spring:
             version: 4.0.2
     jpa:
         hibernate:
-            ddl-auto: create
+            ddl-auto: create-drop
         database-platform: org.hibernate.dialect.H2Dialect
