@@ -42,16 +42,19 @@ public class Report {
     /**
      * Report date
      */
+    @Column(name = "report_date")
     private LocalDate reportDate;
 
     /**
      * Total revenue for the report
      */
+    @Column(name = "total_revenue")
     private BigDecimal totalRevenue;
 
     /**
      * Net profit for the report
      */
+    @Column(name = "net_profit")
     private BigDecimal netProfit;
 
     /**

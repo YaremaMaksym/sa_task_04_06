@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd
+      http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="create-report-details-collection" author="yaremax">
+        <ext:createCollection collectionName="ReportDetails">
+            <ext:options>
+                {
+                validator: {
+                    $jsonSchema: {
+                        bsonType: "object",
+                        required: ["reportId", "financialData", "comments"],
+                            properties: {
+                                reportId: {
+                                    bsonType: "uuid",
+                                    description: "report uuid"
+                                },
+                                financialData: {
+                                    bsonType: "object",
+                                    description: "financial data objects"
+                                },
+                                comments: {
+                                    bsonType: "string",
+                                    description: "comments"
+                                }
+                            }
+                        }
+                    },
+                    validationAction: "warn",
+                    validationLevel: "strict"
+                }
+            </ext:options>
+        </ext:createCollection>
+    </changeSet>
+</databaseChangeLog>

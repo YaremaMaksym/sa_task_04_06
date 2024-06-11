@@ -22,7 +22,9 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <compiler-plugin.version>3.13.0</compiler-plugin.version>
         <org.mapstruct.version>1.6.0.Beta1</org.mapstruct.version>
+        <liquibase.version>4.15.0</liquibase.version>
         <lombok.version>1.18.30</lombok.version>
+        <jwt.version>0.11.5</jwt.version>
     </properties>
 
     <dependencies>
@@ -34,10 +36,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.liquibase</groupId>-->
-<!--            <artifactId>liquibase-core</artifactId>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -50,21 +48,32 @@
             <version>${org.mapstruct.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>${liquibase.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.liquibase.ext</groupId>
+            <artifactId>liquibase-mongodb</artifactId>
+            <version>${liquibase.version}</version>
+        </dependency>
+
 <!--        JWT-->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
-            <version>0.11.5</version>
+            <version>${jwt.version}</version>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-impl</artifactId>
-            <version>0.11.5</version>
+            <version>${jwt.version}</version>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-jackson</artifactId>
-            <version>0.11.5</version>
+            <version>${jwt.version}</version>
         </dependency>
 
 <!--        TESTING-->

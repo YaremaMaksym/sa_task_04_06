@@ -1,0 +1,5 @@
+databaseChangeLog:
+    - include:
+          file: db/changelog/db.postgresql-changelog-master.yaml
+    - include:
+          file: db/changelog/db.mongodb-changelog-master.xml

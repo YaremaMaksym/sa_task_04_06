@@ -1,0 +1,249 @@
+databaseChangeLog:
+    - changeSet:
+          id: create-users-table
+          author: yaremax
+          changes:
+              - createTable:
+                    tableName: users
+                    columns:
+                        - column:
+                              name: id
+                              type: UUID
+                              constraints:
+                                  primaryKey: true
+                                  nullable: false
+                        - column:
+                              name: email
+                              type: VARCHAR(255)
+                              constraints:
+                                  nullable: false
+                        - column:
+                              name: password
+                              type: VARCHAR(255)
+                              constraints:
+                                  nullable: false
+
+    - changeSet:
+          id: create-companies-table
+          author: yaremax
+          changes:
+              - createTable:
+                    tableName: companies
+                    columns:
+                        - column:
+                              name: id
+                              type: UUID
+                              constraints:
+                                  primaryKey: true
+                        - column:
+                              name: name
+                              type: VARCHAR(255)
+                        - column:
+                              name: registration_number
+                              type: VARCHAR(255)
+                              constraints:
+                                  nullable: false
+                                  unique: true
+                        - column:
+                              name: address
+                              type: VARCHAR(255)
+                        - column:
+                              name: created_at
+                              type: TIMESTAMP
+                              defaultValueComputed: CURRENT_TIMESTAMP
+
+    - changeSet:
+          id: create-reports-table
+          author: yaremax
+          changes:
+              - createTable:
+                    tableName: reports
+                    columns:
+                        - column:
+                              name: id
+                              type: UUID
+                              constraints:
+                                  primaryKey: true
+                        - column:
+                              name: company_id
+                              type: UUID
+#                              constraints:
+#                                  foreignKeyName: fk_report_company
+                        - column:
+                              name: report_date
+                              type: TIMESTAMP
+                        - column:
+                              name: total_revenue
+                              type: DECIMAL
+                        - column:
+                              name: net_profit
+                              type: DECIMAL
+                    constraints:
+                        - foreignKey:
+                              name: fk_report_company
+                              columnNames: company_id
+                              referencedTableName: companies
+                              referencedColumnNames: id
+
+    - changeSet:
+          id: insert-companies
+          author: yaremax
+          changes:
+              - insert:
+                    tableName: companies
+                    columns:
+                        - column:
+                              name: id
+                              value: a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11
+                        - column:
+                              name: name
+                              value: Acme Inc.
+                        - column:
+                              name: registration_number
+                              value: '1234567890'
+                        - column:
+                              name: address
+                              value: 123 Main St, Cityville
+              - insert:
+                    tableName: companies
+                    columns:
+                        - column:
+                              name: id
+                              value: 8a7a9c0b-5ab7-4b6d-9d8e-f2b4c1f6e8b3
+                        - column:
+                              name: name
+                              value: Globex Corp.
+                        - column:
+                              name: registration_number
+                              value: '0987654321'
+                        - column:
+                              name: address
+                              value: 456 Oak Ave, Townsville
+              - insert:
+                    tableName: companies
+                    columns:
+                        - column:
+                              name: id
+                              value: 4c2f7e9d-b6d2-4d8b-9b7a-f1b2c3d4e5f6
+                        - column:
+                              name: name
+                              value: Stark Industries
+                        - column:
+                              name: registration_number
+                              value: '5678901234'
+                        - column:
+                              name: address
+                              value: 789 Elm Rd, Villageton
+
+    - changeSet:
+          id: insert-reports
+          author: yaremax
+          changes:
+              - insert:
+                    tableName: reports
+                    columns:
+                        - column:
+                              name: id
+                              value: e7c7d7a8-f9d3-4a3e-b8c9-d9e0f1b2c3d4
+                        - column:
+                              name: company_id
+                              value: a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11
+                        - column:
+                              name: report_date
+                              valueDate: 2023-01-01
+                        - column:
+                              name: total_revenue
+                              valueNumeric: 1000000.00
+                        - column:
+                              name: net_profit
+                              valueNumeric: 500000.00
+              - insert:
+                    tableName: reports
+                    columns:
+                        - column:
+                              name: id
+                              value: c8d9e0f1-b2c3-d4e5-f6a7-b8c9d0e1f2a3
+                        - column:
+                              name: company_id
+                              value: a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11
+                        - column:
+                              name: report_date
+                              valueDate: 2023-04-01
+                        - column:
+                              name: total_revenue
+                              valueNumeric: 800000.00
+                        - column:
+                              name: net_profit
+                              valueNumeric: 400000.00
+              - insert:
+                    tableName: reports
+                    columns:
+                        - column:
+                              name: id
+                              value: a1b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6
+                        - column:
+                              name: company_id
+                              value: 8a7a9c0b-5ab7-4b6d-9d8e-f2b4c1f6e8b3
+                        - column:
+                              name: report_date
+                              valueDate: 2023-03-01
+                        - column:
+                              name: total_revenue
+                              valueNumeric: 2500000.00
+                        - column:
+                              name: net_profit
+                              valueNumeric: 1000000.00
+              - insert:
+                    tableName: reports
+                    columns:
+                        - column:
+                              name: id
+                              value: b2c3d4e5-f6a7-b8c9-d0e1-f2a3b4c5d6a7
+                        - column:
+                              name: company_id
+                              value: 8a7a9c0b-5ab7-4b6d-9d8e-f2b4c1f6e8b3
+                        - column:
+                              name: report_date
+                              valueDate: 2023-06-01
+                        - column:
+                              name: total_revenue
+                              valueNumeric: 2000000.00
+                        - column:
+                              name: net_profit
+                              valueNumeric: 800000.00
+              - insert:
+                    tableName: reports
+                    columns:
+                        - column:
+                              name: id
+                              value: c3d4e5f6-a7b8-c9d0-e1f2-a3b4c5d6a7b8
+                        - column:
+                              name: company_id
+                              value: 8a7a9c0b-5ab7-4b6d-9d8e-f2b4c1f6e8b3
+                        - column:
+                              name: report_date
+                              valueDate: 2023-09-01
+                        - column:
+                              name: total_revenue
+                              valueNumeric: 1800000.00
+                        - column:
+                              name: net_profit
+                              valueNumeric: 700000.00
+              - insert:
+                    tableName: reports
+                    columns:
+                        - column:
+                              name: id
+                              value: d4e5f6a7-b8c9-d0e1-f2a3-b4c5d6a7b8c9
+                        - column:
+                              name: company_id
+                              value: 4c2f7e9d-b6d2-4d8b-9b7a-f1b2c3d4e5f6
+                        - column:
+                              name: report_date
+                              valueDate: 2023-02-01
+                        - column:
+                              name: total_revenue
+                              valueNumeric: 3000000.00
+                        - column:
+                              name: net_profit
+                              valueNumeric: 1500000.00

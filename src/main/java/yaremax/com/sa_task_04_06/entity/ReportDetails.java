@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -18,7 +19,7 @@ import java.util.UUID;
  * @since 2024-10-06
  */
 @Data
-@Document
+@Document(collection = "reportDetails")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,16 +28,19 @@ public class ReportDetails {
      * Report id
      */
     @Id
+    @Field("reportId")
     private UUID reportId;
 
     /**
      * JSON data of the financial details
      */
+    @Field("financialData")
     private org.bson.Document financialData;
 
     /**
      * Comments about the report
      */
+    @Field("comments")
     private String comments;
 
     /**

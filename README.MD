@@ -6,16 +6,17 @@
 - [Technologies](#technologies)
 - [Documentation](#documentation)
 - [Installation](#installation)
+- [Auth](#auth)
 
 ## Technologies
 
 The project uses the following technologies and frameworks:
 
-[//]: # (- Liquibase &#40;db migrations&#41;)
 - Java 11
 - Maven (for project management)
 - Spring (Framework, Security, Boot, MVC, Data JPA)
 - JWT (Authentication)
+- Liquibase (db migrations)
 - PostgreSQL (as sql db)
 - MongoDB (as noSql db)
 - H2 (testing sql db)
@@ -48,4 +49,13 @@ To run the project locally in docker, follow these steps:
 
 3. Run `docker compose up -d` to create and start containers.
 
-The application should now be running on [http://localhost:8080](http://localhost:8080).
+**The application should now be running on [http://localhost:8080](http://localhost:8080).**
+
+## Auth
+
+Keep in mind that app is using spring security with jwt tokens to auth. \
+So to use API you have to be authenticated: 
+* register at [http://localhost:8080/api/v1/auth/register](http://localhost:8080/api/v1/auth/register).
+* login [http://localhost:8080/api/v1/auth/login](http://localhost:8080/api/v1/auth/login) if you already registered.
+
+Then you should pass bearer token with jwt to all request except swagger documentation page.

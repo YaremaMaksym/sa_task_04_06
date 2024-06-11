@@ -41,7 +41,7 @@ public class Company {
     /**
      * Company registration number
      */
-    @Column(unique = true)
+    @Column(name = "registration_number", unique = true)
     private String registrationNumber;
 
     /**

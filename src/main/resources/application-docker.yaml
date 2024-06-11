@@ -13,14 +13,9 @@ spring:
             uri: ${MONGODB_URI}
     jpa:
         hibernate:
-            ddl-auto: create-drop
-            naming:
-                physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-        properties:
-            hibernate:
-                show_sql: true
-                format_sql: true
-
+            ddl-auto: none
+    liquibase:
+        enabled: true
 
 app:
     config:

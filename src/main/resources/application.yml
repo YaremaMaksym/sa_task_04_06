@@ -13,9 +13,9 @@ spring:
             uri: mongodb://localhost:27017/sa_db
     jpa:
         hibernate:
-            ddl-auto: create-drop
-            naming:
-                physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+            ddl-auto: none
+    liquibase:
+        enabled: true
 
 app:
     config:
