@@ -1,6 +1,7 @@
 package yaremax.com.sa_task_04_06.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import yaremax.com.sa_task_04_06.entity.User;
 
 import java.util.Optional;
@@ -13,6 +14,7 @@ import java.util.Optional;
  * @version 1.0
  * @since 2024-10-06
  */
+@Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
     /**

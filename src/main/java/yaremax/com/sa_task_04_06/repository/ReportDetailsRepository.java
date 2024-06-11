@@ -1,6 +1,7 @@
 package yaremax.com.sa_task_04_06.repository;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
 import yaremax.com.sa_task_04_06.entity.ReportDetails;
 
 import java.util.UUID;
@@ -12,5 +13,6 @@ import java.util.UUID;
  * @version 1.0
  * @since 2024-10-06
  */
+@Repository
 public interface ReportDetailsRepository extends MongoRepository<ReportDetails, UUID> {
 }
