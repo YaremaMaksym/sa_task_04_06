@@ -1,10 +1,12 @@
 package yaremax.com.sa_task_04_06.exception;
 
 import io.jsonwebtoken.JwtException;
+import org.hibernate.PropertyValueException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -63,14 +65,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 
     /**
-     * Handles {@link InvalidDataException} by calling {@link #handleException(RuntimeException, HttpServletRequest, HttpStatus)}
+     * Handles {@link InvalidDataException}, {@link PropertyValueException}, {@link UsernameNotFoundException} by calling {@link #handleException(RuntimeException, HttpServletRequest, HttpStatus)}
      * with the provided exception, request, and {@link HttpStatus#BAD_REQUEST}.
      *
      * @param ex            the exception to handle
      * @param request       the HTTP servlet request
      * @return              the response entity containing the {@link ApiException} object
      */
-    @ExceptionHandler(value = {InvalidDataException.class})
+    @ExceptionHandler(value = {InvalidDataException.class, PropertyValueException.class, UsernameNotFoundException.class})
     public ResponseEntity<Object> handleBadRequestExceptions(RuntimeException ex, HttpServletRequest request){
         return handleException(ex, request, HttpStatus.BAD_REQUEST);
     }
