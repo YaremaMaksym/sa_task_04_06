@@ -1,21 +1,24 @@
+server:
+    port: 8080
+
 spring:
     application:
         name: sa_task_04_06
+    datasource:
+        url: jdbc:postgresql://localhost:5432/sa_db
+        username: postgres
+        password: pass
     data:
         mongodb:
             uri: mongodb://localhost:27017/sa_db
-            username: admin
-            password: pass
-    datasource:
-        url: jdbc:postgresql://localhost:5430/sa_db
-        username: postgres
-        password: pass
     jpa:
         hibernate:
-            ddl-auto: update
+            ddl-auto: create-drop
+            naming:
+                physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
 app:
     config:
         security:
             jwt:
-                secret_key: ${JWT_SECRET_KEY}
+                secret_key: 3673f827897f5dd46806cc0463f6486738d6d039adca0e5adeef1dcd3deb7048d085f98ec575e754c5d8c675bc35ad6d847b355bd2a96a57b4249db758f2172face19f715e77add2bd58e56cf6ef349c139b878106ffb06f642d911b8165750be28078a23d7da6f9d632fbdaf1680fb8d056e7b8895174fc892ff1548c71d2f923bbadff58453327d12177528522b762303ad7635693c557b48a1a7d43b5c638ff52e5566f6a37f801f9dc2157482ceca4ad2d823c48a93844e1c7946c65be7fcb763a54ca6690dd59190bb02fa359ff69dc2a9c1679083ef73bb91cd3385438092003b58ac8a5777ac83af76bb6db673d662a7ca0b23e9e3d338a89b41191fc

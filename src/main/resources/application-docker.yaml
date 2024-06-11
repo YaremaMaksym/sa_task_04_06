@@ -1,0 +1,29 @@
+server:
+    port: 8080
+
+spring:
+    application:
+        name: sa_task_04_06
+    datasource:
+        url: ${POSTGRES_URL}
+        username: ${POSTGRES_USERNAME}
+        password: ${POSTGRES_PASSWORD}
+    data:
+        mongodb:
+            uri: ${MONGODB_URI}
+    jpa:
+        hibernate:
+            ddl-auto: create-drop
+            naming:
+                physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        properties:
+            hibernate:
+                show_sql: true
+                format_sql: true
+
+
+app:
+    config:
+        security:
+            jwt:
+                secret_key: ${JWT_SECRET_KEY}
